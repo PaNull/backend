@@ -1,11 +1,12 @@
 import { Router } from 'express';
 import UserController from '../../controllers/UserController';
-import { can } from '../../middlewares/auth';
 
 const userRoutes = new Router();
 
-userRoutes.post('/users', UserController.create);
-userRoutes.post('/session', UserController.session);
-userRoutes.get('/users', can(['PERMISSION_READ']), UserController.index);
+userRoutes.get('/users', UserController.index);
+userRoutes.get('/user', UserController.getById);
+userRoutes.post('/user', UserController.create);
+userRoutes.put('/user', UserController.update);
+userRoutes.delete('/user/:id', UserController.delete);
 
 export default userRoutes;

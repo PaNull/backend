@@ -9,7 +9,6 @@
 
 <a id="tech"></a>
 
-Este repositório foi criado para demonstrar como funciona o conceito de Role Based Access Control para os alunos do curso DEVinHouse.
 ## Tecnologias
 
 O projeto desenvolvido utiliza as seguintes tecnologias:
@@ -19,7 +18,6 @@ O projeto desenvolvido utiliza as seguintes tecnologias:
 - [Swagger-Autogen](https://github.com/davibaltar/swagger-autogen/)
 - [Bcrypt](https://github.com/kelektiv/node.bcrypt.js/)
 - [Sequelize](https://sequelize.org/)
-- [Postgres](https://www.postgresql.org/)
 
 <a id="settings"></a>
 
@@ -50,8 +48,7 @@ $ yarn sequelize db:create
 ```
 ```bash
 # Criar um arquivo .env a partir do arquivo .env.sample
-$ DATABASE_URL=postgresql://user:password@host:port/database
-$ SECRET=senha secreta
+$ DATABASE_URL=string_connect
 ```
 ```bash
 # Para popular as tabelas no postgres

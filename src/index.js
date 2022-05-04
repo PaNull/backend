@@ -1,13 +1,17 @@
 import express from 'express';
 import routes from './routes';
-import './database';
-
+const cors = require('cors')
 class App {
 
   constructor() {
     this.server = express()
     this.middlewares()
+    this.cors()
     this.routes()
+  }
+
+  cors() {
+    this.server.use(cors())
   }
 
   middlewares() {

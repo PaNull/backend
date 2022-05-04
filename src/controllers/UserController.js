@@ -1,93 +1,51 @@
-import User from '../models/User'
-import { sign } from 'jsonwebtoken'
-import {Op} from 'sequelize'
-import UserRole from '../models/UserRole'
-import RoleService from '../services/role.service'
-import bcrypt from 'bcrypt'
+const db = require("../config/database");
+
 class UserController {
+
   async index(req, res) {
+    const conn = await db.connect();
 
-    const users = await User.findAll({
-      attributes: ['name', 'email'],
-      include: {
-        model: UserRole,
-        as: 'roles',
-        attributes: ['role_id']
-      }
-    })
-
-    const usersWithRoles = await Promise.all(users.map(async({name, email, roles})=> {
-      return {
-        name, 
-        email, 
-        roles: await Promise.all(roles.map(async({role_id}) => {
-          const role = await RoleService.getByRoleId(role_id)
-          return role
-        }))
-      }
-    }))
+    const [rows, fields] = await conn.execute('SELECT id_usuario, nome, email, dataNascimento, cpf, cargo, nacionalidade FROM usuario');
     
-    return res.status(200).json({ users: usersWithRoles })
+    return res.status(200).json({ data: rows })
+  }
+ 
+  async getById(req, res) {
+    const { id } = req.body;
+    const conn = await db.connect();
+
+    const [rows, fields] = await conn.execute(`SELECT nome, email, dataNascimento, cpf, nacionalidade, cargo FROM usuario WHERE id_usuario=${id}`);
+    
+    return res.status(200).json({ data: rows[0] })
   }
 
   async create(req, res) {
-    try {
-      const { name, password, email, roles } = req.body;
-      await User.create({
-        name, 
-        password, 
-        email,
-        roles: roles.map((role)=> {
-          return {role_id: role}
-        })
-      }, {
-        include: {
-          association: 'roles'
-        }
-      })
-  
-      return res.status(201).send({ message: 'Usuário salvo com sucesso.' })
-      
-    } catch (error) {
-      const [err] = error.errors
-      return res.status(400).send({ message: err.message })
-    }
+    const conn = await db.connect();
+    const { nome, email, dataNascimento, cpf, nacionalidade, cargo, senha} = req.body;
+
+    const [rows, fields] = await conn.execute(`INSERT INTO usuario (nome, email, dataNascimento, cpf, nacionalidade, cargo, senha) VALUES ('${nome}', '${email}', '${dataNascimento}', '${cpf}', '${nacionalidade}', '${cargo}', '${senha}')`);
+    
+    return res.status(200);
   }
-  
-  async session(req, res) {
-    try {
-      const { email, password } = req.body;
 
-      const user = await User.findOne({
-        attributes: ['id', 'email', 'password'],
-        where: {
-          email: {
-            [Op.eq]: email
-          }
-        },
-        include: {
-          model: UserRole,
-          as: 'roles',
-          attributes: ['role_id']
-        }
-      })
-      const match = await bcrypt.compareSync(password, user.password)
-      if(!match){
-        return res.status(400).send({ message: 'Email ou senha inválidos' })
-      }
+  async update(req, res) {
+    const conn = await db.connect();
+    const { id, nome, email, dataNascimento, cpf, nacionalidade, cargo } = req.body;
 
-      const { roles } = user
+    const result = await conn.query('UPDATE usuario SET ? WHERE id_usuario=?', [ { nome, email, dataNascimento, cpf, nacionalidade, cargo }, id], (err) => {
+      console.log(err)
+    });
+    
+    return res.status(200);
+  }
 
-      const token = sign({userId: user.id, roles}, process.env.SECRET, {
-        expiresIn: '1d'
-      })
+  async delete(req, res) {
+    const conn = await db.connect();
+    const { id } = req.params;
 
-      return res.status(201).send({ token: token })
-      
-    } catch (error) {
-      const [err] = error.errors
-      return res.status(400).send({ message: err.message })
-    }
+    const [rows, fields] = await conn.execute(`DELETE FROM usuario WHERE id_usuario=${id}`);
+    
+    return res.status(200);
   }
 }
 
