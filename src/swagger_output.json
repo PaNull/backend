@@ -1,14 +1,15 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "My API",
-    "description": "Description",
+    "title": "PANULL API",
+    "description": "API para projeto de aplicação do curso de sistemas de informação.",
     "version": "1.0.0"
   },
   "host": "localhost:3333",
   "basePath": "/",
   "schemes": [
-    "http"
+    "http",
+    "https"
   ],
   "securityDefinitions": {
     "bearerAuth": {

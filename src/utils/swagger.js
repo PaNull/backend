@@ -9,6 +9,7 @@ const doc = {
       description: 'API para projeto de aplicação do curso de sistemas de informação.',
     },
     host: process.env.HOST || 'localhost:3333',
+    schemes: ['http', 'https'],
     securityDefinitions: {
         bearerAuth: {
           type: 'apiKey',
