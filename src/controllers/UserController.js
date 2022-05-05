@@ -7,6 +7,10 @@ class UserController {
     
     const [rows, fields] = await conn.execute('SELECT id_usuario, nome, email, dataNascimento, cpf, cargo, nacionalidade FROM usuario');
     
+    rows.forEach(user => {
+      user.link = `../update/index.html?id=${user.id_usuario}`;
+    });
+
     return res.status(200).json({ data: rows })
   }
  
