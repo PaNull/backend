@@ -17,7 +17,7 @@ O projeto desenvolvido utiliza as seguintes tecnologias:
 - [Swagger](https://swagger.io/)
 - [Swagger-Autogen](https://github.com/davibaltar/swagger-autogen/)
 - [Bcrypt](https://github.com/kelektiv/node.bcrypt.js/)
-- [Sequelize](https://sequelize.org/)
+- [Mysql](https://www.npmjs.com/package/mysql2)
 
 <a id="settings"></a>
 
@@ -25,16 +25,16 @@ O projeto desenvolvido utiliza as seguintes tecnologias:
 
 ### **Pré-requisitos**
 
-  - Possuir o NodeJS e o Postgres instalado na sua máquina.
+  - Possuir o NodeJS e o MySql instalado na sua máquina.
 
 ```bash
 # Clone o Repositório
-$ git clone https://github.com/pedrohbsilva/aulas_sequelize.git
+$ git clone git@github.com:PaNull/backend.git
 ```
 
 ```bash
 # Entre na pasta projeto
-$ cd aulas_sequelize
+$ cd backend
 
 ```
 ```bash
@@ -43,16 +43,8 @@ $ cd aulas_sequelize
 $ yarn ou npm install
 ```
 ```bash
-# Criar o Database utilizando o Sequelize
-$ yarn sequelize db:create 
-```
-```bash
 # Criar um arquivo .env a partir do arquivo .env.sample
 $ DATABASE_URL=string_connect
-```
-```bash
-# Para popular as tabelas no postgres
-$ yarn sequelize db:migrate
 ```
 ```bash
 # Executar o programa.

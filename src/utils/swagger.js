@@ -5,8 +5,8 @@ const endpointsFiles = ['./src/index.js'];
     
 const doc = {
     info: {
-    title: 'My API',
-    description: 'Description',
+      title: 'PANULL API',
+      description: 'API para projeto de aplicação do curso de sistemas de informação.',
     },
     host: process.env.HOST || 'localhost:3333',
     securityDefinitions: {

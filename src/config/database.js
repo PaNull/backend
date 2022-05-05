@@ -9,9 +9,8 @@ export async function connect() {
 
   const connection = await mysql.createConnection(databaseUrl);
   console.log("Conectou no MySQL!");
- 
+
   global.connection = connection;
   
   return connection;
 }
-
