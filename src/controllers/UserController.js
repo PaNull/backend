@@ -14,6 +14,18 @@ class UserController {
     return res.status(200).json({ data: rows })
   }
  
+  async login(req, res) {
+    const { id, password } = req.body;
+    const conn = await db.connect();
+    
+    const [rows, fields] = await conn.execute(`SELECT nome, email, dataNascimento, cpf, nacionalidade, cargo FROM usuario WHERE email=? and senha=?`, [id, password]);
+    
+    if (rows.length)
+      return res.status(200).json({ data: rows[0] })
+
+    return res.status(400).json({ message: 'Usuario não encontrado.' })
+  }
+
   async getById(req, res) {
     const { id } = req.params;
     const conn = await db.connect();
