@@ -1,14 +1,14 @@
 const db = require("../config/database");
 const utils = require('../utils/utils');
-const querySelect = `Select par.partidaId, par.resultado, par.dataPartida, par.ganhadorId, eq.id as idEquipe, eq.nome From partida par Join equipe eq on par.idTimeA = eq.id or par.idTimeB = eq.id`;
+const querySelect = `Select par.id_partida, par.resultado, par.dataPartida, par.id_ganhador as ganhadorId, tim.id_time as idTime, tim.nome From partida par Join time tim on par.id_timeA = tim.id_time or par.id_timeB = tim.id_time`;
 
 class MatchController {
 
   mapMatch(resultQuery) {
-    const matchesGroup = utils.groupBy(resultQuery, 'partidaId', 'teams');
+    const matchesGroup = utils.groupBy(resultQuery, 'id_partida', 'teams');
 
     return matchesGroup.map(match => {
-      const teamMap = match.teams.map(team => ({ idEquipe: team.idEquipe, nome: team.nome })) ;
+      const teamMap = match.teams.map(team => ({ idTime: team.idTime, nome: team.nome })) ;
 
       return { 
         partidaId: match.id,
@@ -35,7 +35,7 @@ class MatchController {
     const { id } = req.params;
     const conn = await db.connect();
     
-    const [rows, fields] = await conn.execute(`${querySelect} WHERE partidaId=?`, [id]);
+    const [rows, fields] = await conn.execute(`${querySelect} WHERE id_partida=?`, [id]);
 
     const data = new MatchController().mapMatch(rows);
 
@@ -46,10 +46,10 @@ class MatchController {
   }
 
   async create(req, res) {
-    const { idTeamA, idTeamB, dataPartida } = req.body;
+    const { idTeamA, idTeamB, dataPartida, idCampeonato } = req.body;
     const conn = await db.connect();
     
-    const [rows, fields] = await conn.execute(`INSERT INTO partida (idTimeA, idTimeB, dataPartida) VALUES (?, ?, ?)`, [idTeamA, idTeamB, new Date(dataPartida)]);
+    const [rows, fields] = await conn.execute(`INSERT INTO partida (id_timeA, id_timeB, dataPartida, id_campeonato) VALUES (?, ?, ?, ?)`, [idTeamA, idTeamB, new Date(dataPartida), idCampeonato]);
     
     return res.status(200).json({ message: 'Partida criada com sucesso.' });
   }
@@ -58,7 +58,7 @@ class MatchController {
     const { id, resultado, ganhadorId } = req.body;
     const conn = await db.connect();
 
-    const [{affectedRows}, fields] = await conn.query('UPDATE partida SET ? WHERE partidaId=?', [ { resultado, ganhadorId }, id]);
+    const [{affectedRows}, fields] = await conn.query('UPDATE partida SET ? WHERE id_partida=?', [ { resultado, id_ganhador: ganhadorId }, id]);
     
     
     if (affectedRows)
@@ -71,7 +71,7 @@ class MatchController {
     const { id } = req.params;
     const conn = await db.connect();
 
-    const [{affectedRows}, fields] = await conn.execute(`DELETE FROM partida WHERE partidaId=?`, [id]);
+    const [{affectedRows}, fields] = await conn.execute(`DELETE FROM partida WHERE id_partida=?`, [id]);
     
     if (affectedRows)
       return res.status(200).json({ message: 'Partida deletada com sucesso.' });

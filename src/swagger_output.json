@@ -531,6 +531,9 @@
                 },
                 "dataPartida": {
                   "example": "any"
+                },
+                "idCampeonato": {
+                  "example": "any"
                 }
               }
             }
