@@ -45,13 +45,32 @@ class MatchController {
     return res.status(400).json({ message: 'Partida não encontrada.' })
   }
 
-  async create(req, res) {
-    const { idTeamA, idTeamB, dataPartida, idCampeonato } = req.body;
+  async getByTournamentId(req, res) {
+    const { id } = req.params;
     const conn = await db.connect();
     
-    const [rows, fields] = await conn.execute(`INSERT INTO partida (id_timeA, id_timeB, dataPartida, id_campeonato) VALUES (?, ?, ?, ?)`, [idTeamA, idTeamB, new Date(dataPartida), idCampeonato]);
+    const [rows, fields] = await conn.execute(`${querySelect} WHERE id_campeonato=?`, [id]);
+
+    const data = new MatchController().mapMatch(rows);
+
+    if (rows.length)
+      return res.status(200).json({ data })
+
+    return res.status(400).json({ message: 'Partida não encontrada.' })
+  }
+
+  async create(req, res) {
+    const { idTeamA, idTeamB, dataPartida, idCampeonato } = req.body;
+
+    const [rows, fields] = await new MatchController().createMatch({ idTeamA, idTeamB, dataPartida, idCampeonato });
     
     return res.status(200).json({ message: 'Partida criada com sucesso.' });
+  }
+
+  async createMatch({ idTeamA, idTeamB, dataPartida, idCampeonato }) {
+    const conn = await db.connect();
+    
+    return await conn.execute(`INSERT INTO partida (id_timeA, id_timeB, dataPartida, id_campeonato) VALUES (?, ?, ?, ?)`, [idTeamA, idTeamB, new Date(dataPartida), idCampeonato]);
   }
 
   async update(req, res) {

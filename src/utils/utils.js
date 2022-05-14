@@ -3,3 +3,9 @@ export const groupBy = (array, prop, propContent) => {
 
     return Object.keys(hash).map(k => ({id: +k, [propContent]: hash[k]}));
 }
+
+export const shuffleArray = (array) => {
+    return array.map(value => ({ value, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ value }) => value)
+}
