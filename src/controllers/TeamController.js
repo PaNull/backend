@@ -57,19 +57,19 @@ class TeamController {
   }
 
   async create(req, res) {
-    const { nome } = req.body;
+    const { nome, modalidade } = req.body;
     const conn = await db.connect();
     
-    const [rows, fields] = await conn.execute(`INSERT INTO time ( nome ) VALUES (?)`, [nome]);
+    const [rows, fields] = await conn.execute(`INSERT INTO time ( nome, modalidade ) VALUES (?, ?)`, [nome, modalidade]);
     
     return res.status(200).json({ message: 'Time criado com sucesso.' });
   }
 
   async update(req, res) {
-    const { id, nome } = req.body;
+    const { id, nome, modalidade } = req.body;
     const conn = await db.connect();
 
-    const [{affectedRows}, fields] = await conn.query('UPDATE time SET ? WHERE id_time=?', [ { nome }, id]);
+    const [{affectedRows}, fields] = await conn.query('UPDATE time SET ? WHERE id_time=?', [ { nome, modalidade }, id]);
     
     
     if (affectedRows)
