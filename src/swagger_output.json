@@ -461,6 +461,9 @@
               "properties": {
                 "nome": {
                   "example": "any"
+                },
+                "modalidade": {
+                  "example": "any"
                 }
               }
             }
@@ -485,6 +488,9 @@
                   "example": "any"
                 },
                 "nome": {
+                  "example": "any"
+                },
+                "modalidade": {
                   "example": "any"
                 }
               }
