@@ -89,6 +89,21 @@ class TeamController {
   
     return res.status(400).json({ message: 'Time não encontrado.' });
   }
+
+  async getMatches(req, res) {
+    const { id } = req.params;
+    const conn = await db.connect();
+      
+    const [rows, fields] = await conn.execute(`Select par.id_partida, par.resultado, par.dataPartida, par.id_ganhador as ganhadorId, tim.id_time as idTime, tim.nome From partida par Join time tim on par.id_timeA = tim.id_time or par.id_timeB = tim.id_time WHERE id_time=?`, [id]);
+    //Select tudo das partidas WHERE id_time = [id]
+
+    const data = new MatchController().mapMatch(rows);
+
+    if (rows.length)
+      return res.status(200).json({ data })
+
+    return res.status(400).json({ message: 'Partidas não encontradas' })
+  }
 }
 
 export default new TeamController()

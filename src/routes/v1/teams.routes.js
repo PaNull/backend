@@ -11,4 +11,6 @@ teamRoutes.post('/team/member', TeamController.addTeamMember);
 teamRoutes.put('/team', TeamController.update);
 teamRoutes.delete('/team/:id', TeamController.delete);
 
+teamRoutes.get('/team/matches/:id', TeamController.getMatches)
+
 export default teamRoutes;

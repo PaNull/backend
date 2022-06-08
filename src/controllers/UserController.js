@@ -18,7 +18,7 @@ class UserController {
     const { email, password } = req.body;
     const conn = await db.connect();
     
-    const [rows, fields] = await conn.execute(`SELECT nome, email, dataNascimento, cpf, nacionalidade, cargo FROM usuario WHERE email=? and senha=?`, [email, password]);
+    const [rows, fields] = await conn.execute(`SELECT id_usuario, nome, email, dataNascimento, cpf, nacionalidade, cargo FROM usuario WHERE email=? and senha=?`, [email, password]);
     
     if (rows.length)
       return res.status(200).json({ data: rows[0] })
